@@ -18,16 +18,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Checkmarx AST CLI Action
-        uses: checkmarx/ast-github-action@main #Github Action versionn
+        uses: checkmarx/ast-github-action@main #Github Action version
         with:
           base_uri: https://eu.ast.checkmarx.net/
           cx_tenant: cx_ps_mariana_teixeira
           cx_client_id: ${{ secrets.CX_CLIENT_ID }}
           cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
-          additional_params: --report-format sarif --output-path .
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          # Path to SARIF file relative to the root of the repository
-          sarif_file: cx_result.sarif
-        if: always()
+          additional_params: --sast-preset-name "ASA Premium"
+                              --file-filter '!*README.md,!*app-hello-world*.js'
+                              --threshold "sast-high=10; sast-medium=20"
+    
